@@ -86,7 +86,7 @@ class HttpClient {
         
         // if(imageData==nil)  { return; }
         
-        request.httpBody = createBodyWithParameters(parameters: param, imageKey: "image", imageData: imageData!, boundary: boundary)
+        request.httpBody = createBodyWithParameters(parameters: param, imageKey: "avatar", imageData: imageData!, boundary: boundary)
         
         return request
         

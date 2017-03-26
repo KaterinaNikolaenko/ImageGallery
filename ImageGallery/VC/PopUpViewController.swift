@@ -7,21 +7,79 @@
 //
 
 import UIKit
+import ImageIO
 
 class PopUpViewController: UIViewController {
-
-    @IBOutlet weak var imagePopUp: UIImageView!
+    
+    var tokenString:String = UserDefaults.standard.string(forKey: "token")!
+    
+    @IBOutlet weak var imagePopUp : UIImageView!
     var imageGif : UIImage?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.backgroundColor = UIColor.black.withAlphaComponent(0.8)
-        self.imagePopUp.image = imageGif
-        
-        self.showAnimate()
+        getGifImages()
+    
+        //self.imagePopUp.setGifImage(self.imageGif!, manager: SwiftyGifManager.defaultManager)
+        //self.showAnimate()
     }
 
+    func getGifImages(){
+        
+        var gifString = ""
+        
+        let session = URLSession.shared
+        let httpClient = HttpClient()
+        let task = session.dataTask(with: (httpClient.getImages(tokenString: tokenString)) as URLRequest, completionHandler: { (data, response, error) -> Void in
+            
+            if (error != nil) {
+                print(error!)
+                
+            }
+            else {
+                
+                if data != nil {
+                    
+                    do {
+                        
+                        let dictResult:NSDictionary = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
+                        
+                        if (dictResult["error"] as? String) != nil {
+                            print("error1")
+                            print(dictResult)
+                            
+                        } else
+                            
+                        {
+                            
+                            print(dictResult)
+                            gifString = (dictResult["gif"] as? String)!
+                            DispatchQueue.main.async {
+                                self.imageGif = UIImage.gifImageWithURL(gifUrl: gifString)
+                                
+                                //self.imagePopUp.setGifImage(self.imageGif!, manager: SwiftyGifManager.defaultManager)
+                                self.imagePopUp.image = self.imageGif!
+                                //self.imagePopUp.startAnimatingGif()
+                            }
+                           UserDefaults.standard.synchronize()
+                            
+                        }
+                        
+                    } catch {
+                        print("Error")
+                    }
+                }
+                
+            }
+            
+        })
+        
+        task.resume()
+    }
+
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		065F3E4C1E885A8100E97B92 /* iOSDevCenters+GIF.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065F3E4B1E885A8100E97B92 /* iOSDevCenters+GIF.swift */; };
 		06AF56271E86C661001C4628 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AF56261E86C661001C4628 /* AppDelegate.swift */; };
 		06AF56291E86C661001C4628 /* AuthorizationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AF56281E86C661001C4628 /* AuthorizationVC.swift */; };
 		06AF562C1E86C661001C4628 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 06AF562A1E86C661001C4628 /* Main.storyboard */; };
@@ -22,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		065F3E4B1E885A8100E97B92 /* iOSDevCenters+GIF.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "iOSDevCenters+GIF.swift"; sourceTree = "<group>"; };
 		06AF56231E86C661001C4628 /* ImageGallery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageGallery.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		06AF56261E86C661001C4628 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		06AF56281E86C661001C4628 /* AuthorizationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AuthorizationVC.swift; path = ../AuthorizationVC.swift; sourceTree = "<group>"; };
@@ -97,6 +99,7 @@
 			children = (
 				06CEDED31E87E69200319FD5 /* HttpClient.swift */,
 				06AF56401E86FFE9001C4628 /* Images.swift */,
+				065F3E4B1E885A8100E97B92 /* iOSDevCenters+GIF.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -179,6 +182,7 @@
 				06AF56411E86FFE9001C4628 /* Images.swift in Sources */,
 				06CEDED01E8737C100319FD5 /* AddImageVC.swift in Sources */,
 				06AF56271E86C661001C4628 /* AppDelegate.swift in Sources */,
+				065F3E4C1E885A8100E97B92 /* iOSDevCenters+GIF.swift in Sources */,
 				06CEDED41E87E69200319FD5 /* HttpClient.swift in Sources */,
 				06AF563D1E86F9B2001C4628 /* ListOfImagesVC.swift in Sources */,
 				06CEDECD1E871C4700319FD5 /* CustomCellCollectionView.swift in Sources */,

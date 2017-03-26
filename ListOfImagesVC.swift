@@ -16,6 +16,8 @@ class ListOfImagesVC: UIViewController {
     var galleryImagess = [Image()]
     var imageGif : UIImage?
     
+    var activityIndicator = UIActivityIndicatorView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView.register(UINib(nibName: "CustomCellCollectionView", bundle: nil), forCellWithReuseIdentifier: "MyCustomCell")
@@ -26,7 +28,23 @@ class ListOfImagesVC: UIViewController {
         
         self.navigationController?.navigationBar.tintColor = UIColor.white
         self.navigationController?.navigationBar.backgroundColor = UIColor.red
+        
+        
 
+
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+//        print("test")
+//        activityIndicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 150, height: 150))
+//        activityIndicator.center = self.view.center
+//        activityIndicator.hidesWhenStopped = true
+//        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+//        view.addSubview(activityIndicator)
+//        activityIndicator.startAnimating()
+//        UIApplication.shared.beginIgnoringInteractionEvents() // UIApplication.shared() is now UIApplication.shared
+        
     }
     
      func getImagess() {
@@ -115,12 +133,8 @@ class ListOfImagesVC: UIViewController {
     
     @IBAction func getGifImage(_ sender: Any) {
         
-        getGifImages()
-        let gifString:String = UserDefaults.standard.string(forKey: "gif")!
-        imageGif = UIImage(data:NSData(contentsOf:URL(string: gifString)!) as! Data)
-        
         let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "imagePoUpID") as! PopUpViewController
-        popOverVC.imageGif = imageGif
+       // popOverVC.imageGif = imageGif
         
         self.addChildViewController(popOverVC)
         popOverVC.view.frame = self.view.frame
@@ -129,54 +143,57 @@ class ListOfImagesVC: UIViewController {
 
     }
     
-    func getGifImages(){
-        
-        var gifString = ""
-        
-        let session = URLSession.shared
-        
-        let httpClient1 = HttpClient()
-        
-        let task = session.dataTask(with: (httpClient1.getImages(tokenString: tokenString)) as URLRequest, completionHandler: { (data, response, error) -> Void in
-            
-            if (error != nil) {
-                print(error!)
-                
-            }
-            else {
-                
-                if data != nil {
-                    
-                    do {
-                        
-                        let dictResult:NSDictionary = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
-                        
-                        if (dictResult["error"] as? String) != nil {
-                            print("error1")
-                            print(dictResult)
-                            
-                        } else
-                            
-                        {
-
-                            print(dictResult)
-                            gifString = (dictResult["gif"] as? String)!
-                            UserDefaults.standard.setValue(gifString, forKey: "gif")
-                            UserDefaults.standard.synchronize()
-
-                        }
-                        
-                    } catch {
-                        print("Error")
-                    }
-                }
-                
-            }
-            
-        })
-        
-        task.resume()
-    }
+//    func getGifImages(){
+//        
+//        var gifString = ""
+//        
+//        let session = URLSession.shared
+//        
+//        let httpClient1 = HttpClient()
+//        
+//        let task = session.dataTask(with: (httpClient1.getImages(tokenString: tokenString)) as URLRequest, completionHandler: { (data, response, error) -> Void in
+//            
+//            if (error != nil) {
+//                print(error!)
+//                
+//            }
+//            else {
+//                
+//                if data != nil {
+//                    
+//                    do {
+//                        
+//                        let dictResult:NSDictionary = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
+//                        
+//                        if (dictResult["error"] as? String) != nil {
+//                            print("error1")
+//                            print(dictResult)
+//                            
+//                        } else
+//                            
+//                        {
+//
+//                            print(dictResult)
+//                            //gifString = (dictResult["gif"] as? String)!
+////                            gifString:String = (dictResult["gif"] as? String)!
+////                            imageGif = UIImage(data:NSData(contentsOf:URL(string: gifString)!) as! Data)
+//                            
+////                            UserDefaults.standard.setValue(gifString, forKey: "gif")
+////                            UserDefaults.standard.synchronize()
+//
+//                        }
+//                        
+//                    } catch {
+//                        print("Error")
+//                    }
+//                }
+//                
+//            }
+//            
+//        })
+//        
+//        task.resume()
+//    }
 
     
     
@@ -186,7 +203,13 @@ class ListOfImagesVC: UIViewController {
 
 //MARK: Collection view delegate and datasourse
 extension ListOfImagesVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
+    
+    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+       // return 2
         return self.galleryImagess.count
     }
     
@@ -198,11 +221,12 @@ extension ListOfImagesVC: UICollectionViewDelegate, UICollectionViewDataSource, 
         cell.weatherLabel.text = galleryImagess[indexPath.row].weather
         cell.addressLabel.text = galleryImagess[indexPath.row].address
         
+        self.activityIndicator.stopAnimating()
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 150, height: 150)
+        return CGSize(width: 180, height: 180)
     }
 }
 
