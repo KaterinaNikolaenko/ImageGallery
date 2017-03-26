@@ -20,6 +20,7 @@ class ListOfImagesVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         collectionView.register(UINib(nibName: "CustomCellCollectionView", bundle: nil), forCellWithReuseIdentifier: "MyCustomCell")
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -28,41 +29,24 @@ class ListOfImagesVC: UIViewController {
         
         self.navigationController?.navigationBar.tintColor = UIColor.white
         self.navigationController?.navigationBar.backgroundColor = UIColor.red
-        
-        
-
 
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        
-//        print("test")
-//        activityIndicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 150, height: 150))
-//        activityIndicator.center = self.view.center
-//        activityIndicator.hidesWhenStopped = true
-//        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
-//        view.addSubview(activityIndicator)
-//        activityIndicator.startAnimating()
-//        UIApplication.shared.beginIgnoringInteractionEvents() // UIApplication.shared() is now UIApplication.shared
-        
-    }
     
+    //To get images using Token
      func getImagess() {
         
         let session = URLSession.shared
         
-        let request = NSMutableURLRequest(url: urlGetImages as URL)
+        activityIndicator.center = self.view.center
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        activityIndicator.startAnimating()
+        view.addSubview(activityIndicator)
         
-        do {
-            
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            
-            request.httpMethod = "GET"
-            
-            request.addValue(tokenString, forHTTPHeaderField: "token")
-            
-            
-            let task = session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) -> Void in
+            let httpClient = HttpClient()
+            let task = session.dataTask(with: (httpClient.getImages(tokenString: tokenString)) as URLRequest, completionHandler: { (data, response, error) -> Void in
+                
                 
                 if (error != nil) {
                     print(error!)
@@ -107,14 +91,11 @@ class ListOfImagesVC: UIViewController {
                 }
                 DispatchQueue.main.async {
                   self.collectionView.reloadData()
+                  self.activityIndicator.stopAnimating()
                 }
             })
             
             task.resume()
-            
-        } catch {
-            print("Error")
-        }
         
     }
 
@@ -130,11 +111,10 @@ class ListOfImagesVC: UIViewController {
         
     }
     
-    
+    // Open PopUp
     @IBAction func getGifImage(_ sender: Any) {
         
         let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "imagePoUpID") as! PopUpViewController
-       // popOverVC.imageGif = imageGif
         
         self.addChildViewController(popOverVC)
         popOverVC.view.frame = self.view.frame
@@ -143,63 +123,9 @@ class ListOfImagesVC: UIViewController {
 
     }
     
-//    func getGifImages(){
-//        
-//        var gifString = ""
-//        
-//        let session = URLSession.shared
-//        
-//        let httpClient1 = HttpClient()
-//        
-//        let task = session.dataTask(with: (httpClient1.getImages(tokenString: tokenString)) as URLRequest, completionHandler: { (data, response, error) -> Void in
-//            
-//            if (error != nil) {
-//                print(error!)
-//                
-//            }
-//            else {
-//                
-//                if data != nil {
-//                    
-//                    do {
-//                        
-//                        let dictResult:NSDictionary = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
-//                        
-//                        if (dictResult["error"] as? String) != nil {
-//                            print("error1")
-//                            print(dictResult)
-//                            
-//                        } else
-//                            
-//                        {
-//
-//                            print(dictResult)
-//                            //gifString = (dictResult["gif"] as? String)!
-////                            gifString:String = (dictResult["gif"] as? String)!
-////                            imageGif = UIImage(data:NSData(contentsOf:URL(string: gifString)!) as! Data)
-//                            
-////                            UserDefaults.standard.setValue(gifString, forKey: "gif")
-////                            UserDefaults.standard.synchronize()
-//
-//                        }
-//                        
-//                    } catch {
-//                        print("Error")
-//                    }
-//                }
-//                
-//            }
-//            
-//        })
-//        
-//        task.resume()
-//    }
-
-    
-    
-
 
 }
+
 
 //MARK: Collection view delegate and datasourse
 extension ListOfImagesVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
@@ -221,7 +147,6 @@ extension ListOfImagesVC: UICollectionViewDelegate, UICollectionViewDataSource, 
         cell.weatherLabel.text = galleryImagess[indexPath.row].weather
         cell.addressLabel.text = galleryImagess[indexPath.row].address
         
-        self.activityIndicator.stopAnimating()
         return cell
     }
     

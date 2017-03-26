@@ -11,7 +11,27 @@ import UIKit
 
 class HttpClient {
     
+    //  To get images using Token
     func getImages(tokenString:String) -> NSMutableURLRequest {
+        
+        let urlLogin = NSURL(string: "http://api.doitserver.in.ua/all")!
+        
+        
+        let request = NSMutableURLRequest(url: urlLogin as URL)
+        
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        request.httpMethod = "GET"
+        
+        request.addValue(tokenString, forHTTPHeaderField: "token")
+        
+        
+        return request
+        
+    }
+    
+     //  To get GIF using Token
+    func getImagesGif(tokenString:String) -> NSMutableURLRequest {
         
         let urlLogin = NSURL(string: "http://api.doitserver.in.ua/gif")!
         
@@ -27,9 +47,10 @@ class HttpClient {
         
         return request
         
-        
     }
     
+    
+    //Log in (is user exist in system)
     func postLogIn(email:String, password:String) -> NSMutableURLRequest {
         
         let urlLogin = NSURL(string: "http://api.doitserver.in.ua/login")!
@@ -58,15 +79,14 @@ class HttpClient {
         return request
      }
     
+    
+    // Add new users
      func postUser(email:String, password:String, username:String, image: UIImage) -> NSMutableURLRequest {
         
         let myUrl = NSURL(string: "http://api.doitserver.in.ua/create")
         
-        
         let request = NSMutableURLRequest(url:myUrl! as URL);
         request.httpMethod = "POST";
-        
-        //request.addValue(tokenString, forHTTPHeaderField: "token")
         
         
         let param = [
@@ -80,11 +100,7 @@ class HttpClient {
         
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
         
-        
         let imageData = UIImageJPEGRepresentation(image, 0.5)
-        
-        
-        // if(imageData==nil)  { return; }
         
         request.httpBody = createBodyWithParameters(parameters: param, imageKey: "avatar", imageData: imageData!, boundary: boundary)
         
@@ -92,7 +108,7 @@ class HttpClient {
         
     }
     
-    
+    //  Add images (using Token)
     func postImage(latitude:String, longitude:String, description:String, tokenString:String, image: UIImage) -> NSMutableURLRequest {
         
         let myUrl = NSURL(string: "http://api.doitserver.in.ua/image")
@@ -114,7 +130,6 @@ class HttpClient {
         let boundary = generateBoundaryString()
         
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-        
         
         let imageData = UIImageJPEGRepresentation(image, 0.5)
         

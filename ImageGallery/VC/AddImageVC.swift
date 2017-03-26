@@ -23,6 +23,8 @@ class AddImageVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
     
     let locationManager = CLLocationManager()
     
+    var activityIndicator = UIActivityIndicatorView()
+    
     var locationLatitude:String = "0.0"
     var locationLongitude:String = "0.0"
     
@@ -87,7 +89,11 @@ class AddImageVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
     
     func myImageUploadRequest()
     {
-        
+        activityIndicator.center = self.view.center
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        activityIndicator.startAnimating()
+        view.addSubview(activityIndicator)
         
         let session = URLSession.shared
         let tokenString:String = UserDefaults.standard.string(forKey: "token")!
@@ -114,12 +120,16 @@ class AddImageVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
                 
                 print(json!)
                 
-                self.createAlert(title: "Upload picture", message: "Your picture was successfully uploaded")
+                //self.createAlert(title: "Upload picture", message: "Your picture was successfully uploaded")
                 
                 
             }catch
             {
                 print(error)
+            }
+            DispatchQueue.main.async {
+                self.activityIndicator.stopAnimating()
+                self.createAlert(title: "Upload picture", message: "Your picture was successfully uploaded")
             }
             
         })

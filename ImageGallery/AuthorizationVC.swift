@@ -138,7 +138,7 @@ class AuthorizationVC: UIViewController ,UIImagePickerControllerDelegate, UINavi
         
         let httpClient = HttpClient()
 
-        let task = session.dataTask(with: (httpClient.postUser(email: emailTextField.text!, password: passwordTextField.text!, username: "11", image: photoButton.currentImage!)) as URLRequest, completionHandler: { (data, response, error) -> Void in
+        let task = session.dataTask(with: (httpClient.postUser(email: emailTextField.text!, password: passwordTextField.text!, username: userNameTextField.text!, image: photoButton.currentImage!)) as URLRequest, completionHandler: { (data, response, error) -> Void in
             
             
             if (error != nil) {

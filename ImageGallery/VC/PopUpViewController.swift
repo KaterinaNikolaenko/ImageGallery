@@ -15,23 +15,29 @@ class PopUpViewController: UIViewController {
     
     @IBOutlet weak var imagePopUp : UIImageView!
     var imageGif : UIImage?
+    var activityIndicator = UIActivityIndicatorView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         getGifImages()
     
-        //self.imagePopUp.setGifImage(self.imageGif!, manager: SwiftyGifManager.defaultManager)
-        //self.showAnimate()
     }
-
+    
+   // Get GIF using Token
     func getGifImages(){
         
         var gifString = ""
         
+        activityIndicator.center = self.view.center
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.white
+        activityIndicator.startAnimating()
+        view.addSubview(activityIndicator)
+        
         let session = URLSession.shared
         let httpClient = HttpClient()
-        let task = session.dataTask(with: (httpClient.getImages(tokenString: tokenString)) as URLRequest, completionHandler: { (data, response, error) -> Void in
+        let task = session.dataTask(with: (httpClient.getImagesGif(tokenString: tokenString)) as URLRequest, completionHandler: { (data, response, error) -> Void in
             
             if (error != nil) {
                 print(error!)
@@ -46,21 +52,18 @@ class PopUpViewController: UIViewController {
                         let dictResult:NSDictionary = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
                         
                         if (dictResult["error"] as? String) != nil {
-                            print("error1")
-                            print(dictResult)
+                            print("Error")
+                           // print(dictResult)
                             
                         } else
                             
                         {
                             
-                            print(dictResult)
+                            //print(dictResult)
                             gifString = (dictResult["gif"] as? String)!
                             DispatchQueue.main.async {
                                 self.imageGif = UIImage.gifImageWithURL(gifUrl: gifString)
-                                
-                                //self.imagePopUp.setGifImage(self.imageGif!, manager: SwiftyGifManager.defaultManager)
                                 self.imagePopUp.image = self.imageGif!
-                                //self.imagePopUp.startAnimatingGif()
                             }
                            UserDefaults.standard.synchronize()
                             
@@ -72,7 +75,9 @@ class PopUpViewController: UIViewController {
                 }
                 
             }
-            
+            DispatchQueue.main.async {
+                self.activityIndicator.stopAnimating()
+            }
         })
         
         task.resume()
