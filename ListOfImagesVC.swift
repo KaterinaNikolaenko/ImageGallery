@@ -63,6 +63,7 @@ class ListOfImagesVC: UIViewController {
                             
                             if let dictResultJSON = dictResult as? [String: AnyObject] {
                                 if let imagesResultJSON = dictResultJSON["images"] as? [[String: AnyObject]] {
+                                    print(imagesResultJSON)
                                     for imageJson in imagesResultJSON {
                                         let myImage = Image()
                                         myImage.id = imageJson["id"] as! Int

@@ -17,7 +17,7 @@ extension UIButton {
     }
 }
 
-class AuthorizationVC: UIViewController ,UIImagePickerControllerDelegate, UINavigationControllerDelegate{
+class AuthorizationVC: UIViewController ,UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate{
 
     var signupMode = true
     var activityIndicator = UIActivityIndicatorView()
@@ -37,6 +37,7 @@ class AuthorizationVC: UIViewController ,UIImagePickerControllerDelegate, UINavi
     let picker = UIImagePickerController()
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         
        picker.delegate = self
@@ -44,6 +45,10 @@ class AuthorizationVC: UIViewController ,UIImagePickerControllerDelegate, UINavi
         
       self.navigationController?.navigationBar.tintColor = UIColor.white
       self.navigationController?.navigationBar.backgroundColor = UIColor.red
+        
+      self.emailTextField.delegate = self
+      self.passwordTextField.delegate = self
+      self.userNameTextField.delegate = self
 
     }
     
@@ -52,7 +57,16 @@ class AuthorizationVC: UIViewController ,UIImagePickerControllerDelegate, UINavi
         super.didReceiveMemoryWarning()
         
     }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        emailTextField.resignFirstResponder()
+        passwordTextField.resignFirstResponder()
+        userNameTextField.resignFirstResponder()
+        return true
+    }
     
     @IBAction func selectPhoto(_ sender: Any) {
         
@@ -123,6 +137,12 @@ class AuthorizationVC: UIViewController ,UIImagePickerControllerDelegate, UINavi
                 // Sign Up
                 signUp()
                 
+//                activityIndicator.center = self.view.center
+//                activityIndicator.hidesWhenStopped = true
+//                activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+//                activityIndicator.startAnimating()
+//                view.addSubview(activityIndicator)
+                
             } else {
                 // Login mode
                 self.signIn()
@@ -152,14 +172,25 @@ class AuthorizationVC: UIViewController ,UIImagePickerControllerDelegate, UINavi
                     do {
                         
                         let dictResult:NSDictionary = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
-                        
+                        ///////////////
                         if (dictResult["error"] as? String) != nil {
                             
                             print(dictResult)
                             DispatchQueue.main.async {
-                                self.createAlert(title: "Signup Error", message: "Please try again!")
+                                self.createAlert(title: "Signup Error", message: "Please try again! User with this email already exists!")
                             }
                             
+                        }
+                        else if let dictResultJSON = dictResult as? [String: AnyObject] {
+                             if let dictResultJSON1 = dictResultJSON["children"] as? [String: AnyObject] {
+                                if let dictResultJSON2 = dictResultJSON1["email"] as? [String: AnyObject] {
+                                    if (dictResultJSON2["errors"]) != nil{
+                                        DispatchQueue.main.async {
+                                            self.createAlert(title: "Signup Error", message: "Please try again! User with this email already exists!")
+                                        }
+                                    }
+                                }
+                            }
                         } else
                             
                         {
@@ -169,6 +200,7 @@ class AuthorizationVC: UIViewController ,UIImagePickerControllerDelegate, UINavi
                             UserDefaults.standard.synchronize()
 
                             DispatchQueue.main.sync {
+                               // self.activityIndicator.stopAnimating()
                                 self.performSegue(withIdentifier: "showListOfImages", sender: nil)
                             }
                             
