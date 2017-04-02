@@ -7,7 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		065F3E4C1E885A8100E97B92 /* iOSDevCenters+GIF.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065F3E4B1E885A8100E97B92 /* iOSDevCenters+GIF.swift */; };
+		062CF2051E9149FA0065C120 /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 062CF2041E9149FA0065C120 /* UIViewController.swift */; };
+		062CF2071E914EDB0065C120 /* ImageCellCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 062CF2061E914EDB0065C120 /* ImageCellCollectionView.swift */; };
+		066542911E901D3A00A2B356 /* iOSDevCenters+GIF.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066542901E901D3A00A2B356 /* iOSDevCenters+GIF.swift */; };
+		066542931E901D4E00A2B356 /* UIButton+Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066542921E901D4E00A2B356 /* UIButton+Round.swift */; };
+		066542951E90304400A2B356 /* ApiError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066542941E90304400A2B356 /* ApiError.swift */; };
+		066542971E90307A00A2B356 /* PostLoginRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066542961E90307A00A2B356 /* PostLoginRequest.swift */; };
+		066542991E9030DA00A2B356 /* PostLoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066542981E9030DA00A2B356 /* PostLoginResponse.swift */; };
 		06AF56271E86C661001C4628 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AF56261E86C661001C4628 /* AppDelegate.swift */; };
 		06AF56291E86C661001C4628 /* AuthorizationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AF56281E86C661001C4628 /* AuthorizationVC.swift */; };
 		06AF562C1E86C661001C4628 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 06AF562A1E86C661001C4628 /* Main.storyboard */; };
@@ -15,15 +21,20 @@
 		06AF56311E86C661001C4628 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 06AF562F1E86C661001C4628 /* LaunchScreen.storyboard */; };
 		06AF563D1E86F9B2001C4628 /* ListOfImagesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AF563C1E86F9B2001C4628 /* ListOfImagesVC.swift */; };
 		06AF56411E86FFE9001C4628 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AF56401E86FFE9001C4628 /* Images.swift */; };
-		06CEDECD1E871C4700319FD5 /* CustomCellCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06CEDECB1E871C4700319FD5 /* CustomCellCollectionView.swift */; };
-		06CEDECE1E871C4700319FD5 /* CustomCellCollectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 06CEDECC1E871C4700319FD5 /* CustomCellCollectionView.xib */; };
+		06CEDECE1E871C4700319FD5 /* ImageCellCollectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 06CEDECC1E871C4700319FD5 /* ImageCellCollectionView.xib */; };
 		06CEDED01E8737C100319FD5 /* AddImageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06CEDECF1E8737C100319FD5 /* AddImageVC.swift */; };
 		06CEDED41E87E69200319FD5 /* HttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06CEDED31E87E69200319FD5 /* HttpClient.swift */; };
 		06CEDED61E881FB600319FD5 /* PopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06CEDED51E881FB600319FD5 /* PopUpViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		065F3E4B1E885A8100E97B92 /* iOSDevCenters+GIF.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "iOSDevCenters+GIF.swift"; sourceTree = "<group>"; };
+		062CF2041E9149FA0065C120 /* UIViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
+		062CF2061E914EDB0065C120 /* ImageCellCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCellCollectionView.swift; sourceTree = "<group>"; };
+		066542901E901D3A00A2B356 /* iOSDevCenters+GIF.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "iOSDevCenters+GIF.swift"; sourceTree = "<group>"; };
+		066542921E901D4E00A2B356 /* UIButton+Round.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+Round.swift"; sourceTree = "<group>"; };
+		066542941E90304400A2B356 /* ApiError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiError.swift; sourceTree = "<group>"; };
+		066542961E90307A00A2B356 /* PostLoginRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostLoginRequest.swift; sourceTree = "<group>"; };
+		066542981E9030DA00A2B356 /* PostLoginResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostLoginResponse.swift; sourceTree = "<group>"; };
 		06AF56231E86C661001C4628 /* ImageGallery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageGallery.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		06AF56261E86C661001C4628 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		06AF56281E86C661001C4628 /* AuthorizationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AuthorizationVC.swift; path = ../AuthorizationVC.swift; sourceTree = "<group>"; };
@@ -33,10 +44,9 @@
 		06AF56321E86C661001C4628 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		06AF563C1E86F9B2001C4628 /* ListOfImagesVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ListOfImagesVC.swift; path = ../../ListOfImagesVC.swift; sourceTree = "<group>"; };
 		06AF56401E86FFE9001C4628 /* Images.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
-		06CEDECB1E871C4700319FD5 /* CustomCellCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCellCollectionView.swift; sourceTree = "<group>"; };
-		06CEDECC1E871C4700319FD5 /* CustomCellCollectionView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CustomCellCollectionView.xib; path = VC/CustomCellCollectionView.xib; sourceTree = "<group>"; };
+		06CEDECC1E871C4700319FD5 /* ImageCellCollectionView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ImageCellCollectionView.xib; path = VC/ImageCellCollectionView.xib; sourceTree = "<group>"; };
 		06CEDECF1E8737C100319FD5 /* AddImageVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddImageVC.swift; sourceTree = "<group>"; };
-		06CEDED31E87E69200319FD5 /* HttpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpClient.swift; sourceTree = "<group>"; };
+		06CEDED31E87E69200319FD5 /* HttpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HttpClient.swift; path = ../Model/HttpClient.swift; sourceTree = "<group>"; };
 		06CEDED51E881FB600319FD5 /* PopUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopUpViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -51,6 +61,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		062CF2031E9148D60065C120 /* HTTP */ = {
+			isa = PBXGroup;
+			children = (
+				06CEDED31E87E69200319FD5 /* HttpClient.swift */,
+			);
+			path = HTTP;
+			sourceTree = "<group>";
+		};
+		0665428F1E901C7500A2B356 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				066542921E901D4E00A2B356 /* UIButton+Round.swift */,
+				062CF2041E9149FA0065C120 /* UIViewController.swift */,
+				066542901E901D3A00A2B356 /* iOSDevCenters+GIF.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		06AF561A1E86C660001C4628 = {
 			isa = PBXGroup;
 			children = (
@@ -70,11 +98,13 @@
 		06AF56251E86C661001C4628 /* ImageGallery */ = {
 			isa = PBXGroup;
 			children = (
+				062CF2031E9148D60065C120 /* HTTP */,
+				0665428F1E901C7500A2B356 /* Extensions */,
 				06AF563F1E86FF8B001C4628 /* Model */,
 				06AF563E1E86FF62001C4628 /* VC */,
 				06AF56261E86C661001C4628 /* AppDelegate.swift */,
 				06AF562A1E86C661001C4628 /* Main.storyboard */,
-				06CEDECC1E871C4700319FD5 /* CustomCellCollectionView.xib */,
+				06CEDECC1E871C4700319FD5 /* ImageCellCollectionView.xib */,
 				06AF562D1E86C661001C4628 /* Assets.xcassets */,
 				06AF562F1E86C661001C4628 /* LaunchScreen.storyboard */,
 				06AF56321E86C661001C4628 /* Info.plist */,
@@ -85,8 +115,8 @@
 		06AF563E1E86FF62001C4628 /* VC */ = {
 			isa = PBXGroup;
 			children = (
+				062CF2061E914EDB0065C120 /* ImageCellCollectionView.swift */,
 				06CEDECF1E8737C100319FD5 /* AddImageVC.swift */,
-				06CEDECB1E871C4700319FD5 /* CustomCellCollectionView.swift */,
 				06AF56281E86C661001C4628 /* AuthorizationVC.swift */,
 				06AF563C1E86F9B2001C4628 /* ListOfImagesVC.swift */,
 				06CEDED51E881FB600319FD5 /* PopUpViewController.swift */,
@@ -97,9 +127,10 @@
 		06AF563F1E86FF8B001C4628 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				06CEDED31E87E69200319FD5 /* HttpClient.swift */,
 				06AF56401E86FFE9001C4628 /* Images.swift */,
-				065F3E4B1E885A8100E97B92 /* iOSDevCenters+GIF.swift */,
+				066542941E90304400A2B356 /* ApiError.swift */,
+				066542961E90307A00A2B356 /* PostLoginRequest.swift */,
+				066542981E9030DA00A2B356 /* PostLoginResponse.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -167,7 +198,7 @@
 				06AF56311E86C661001C4628 /* LaunchScreen.storyboard in Resources */,
 				06AF562E1E86C661001C4628 /* Assets.xcassets in Resources */,
 				06AF562C1E86C661001C4628 /* Main.storyboard in Resources */,
-				06CEDECE1E871C4700319FD5 /* CustomCellCollectionView.xib in Resources */,
+				06CEDECE1E871C4700319FD5 /* ImageCellCollectionView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -178,15 +209,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				066542951E90304400A2B356 /* ApiError.swift in Sources */,
+				066542931E901D4E00A2B356 /* UIButton+Round.swift in Sources */,
 				06AF56291E86C661001C4628 /* AuthorizationVC.swift in Sources */,
 				06AF56411E86FFE9001C4628 /* Images.swift in Sources */,
+				066542911E901D3A00A2B356 /* iOSDevCenters+GIF.swift in Sources */,
+				066542971E90307A00A2B356 /* PostLoginRequest.swift in Sources */,
 				06CEDED01E8737C100319FD5 /* AddImageVC.swift in Sources */,
 				06AF56271E86C661001C4628 /* AppDelegate.swift in Sources */,
-				065F3E4C1E885A8100E97B92 /* iOSDevCenters+GIF.swift in Sources */,
+				062CF2051E9149FA0065C120 /* UIViewController.swift in Sources */,
 				06CEDED41E87E69200319FD5 /* HttpClient.swift in Sources */,
 				06AF563D1E86F9B2001C4628 /* ListOfImagesVC.swift in Sources */,
-				06CEDECD1E871C4700319FD5 /* CustomCellCollectionView.swift in Sources */,
 				06CEDED61E881FB600319FD5 /* PopUpViewController.swift in Sources */,
+				062CF2071E914EDB0065C120 /* ImageCellCollectionView.swift in Sources */,
+				066542991E9030DA00A2B356 /* PostLoginResponse.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -48,6 +48,43 @@ class HttpClient {
         return request
         
     }
+    let baseUrl = "http://api.doitserver.in.ua"
+    
+    func postLogIn2(data:PostLoginRequest, successCallback: @escaping (PostLoginResponse) -> (), errorCallback: @escaping (ApiError) -> ()) {
+        let url = NSURL(string: self.baseUrl + "/login")!
+        let request = NSMutableURLRequest(url: url as URL)
+        
+        do {
+            let body = try JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.httpMethod = "POST"
+            request.httpBody = body
+        } catch {
+            print("Error")
+        }
+        
+        let session = URLSession.shared
+        let dataTask = session.dataTask(with: request as URLRequest) { (data, response, error) in
+            let httpResponse = response as! HTTPURLResponse
+            let status = (httpResponse.statusCode)
+            if(status >= 200 && status < 300) {
+                // success, deserialize to PostLoginResponse
+                let successResponse = PostLoginResponse()
+                
+                // call the callback with the loginResponse
+                successCallback(successResponse)
+            }
+            else {
+                // error, deserialize to ApiError
+                let errorResponse = ApiError()
+                
+                // call the callback with the ApiError
+                errorCallback(errorResponse)
+            }
+        }
+        
+        dataTask.resume()
+    }
     
     
     //Log in (is user exist in system)
@@ -109,7 +146,7 @@ class HttpClient {
     }
     
     //  Add images (using Token)
-    func postImage(latitude:String, longitude:String, description:String, tokenString:String, image: UIImage) -> NSMutableURLRequest {
+    func postImage(latitude:String, longitude:String, description:String, tokenString:String, hashtag:String, image: UIImage) -> NSMutableURLRequest {
         
         let myUrl = NSURL(string: "http://api.doitserver.in.ua/image")
         
@@ -123,7 +160,8 @@ class HttpClient {
         let param = [
             "latitude"  : latitude,
             "longitude"    : longitude,
-            "description" : description
+            "description" : description,
+            "hashtag": hashtag
         ]
         
         

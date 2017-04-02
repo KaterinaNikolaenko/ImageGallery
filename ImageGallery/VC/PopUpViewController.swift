@@ -53,17 +53,17 @@ class PopUpViewController: UIViewController {
                         
                         if (dictResult["error"] as? String) != nil {
                             print("Error")
-                           // print(dictResult)
                             
                         } else
                             
                         {
                             
-                            //print(dictResult)
                             gifString = (dictResult["gif"] as? String)!
                             DispatchQueue.main.async {
                                 self.imageGif = UIImage.gifImageWithURL(gifUrl: gifString)
-                                self.imagePopUp.image = self.imageGif!
+                                if self.imageGif != nil{
+                                  self.imagePopUp.image = self.imageGif!
+                                }
                             }
                            UserDefaults.standard.synchronize()
                             

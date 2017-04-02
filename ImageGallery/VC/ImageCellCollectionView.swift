@@ -1,15 +1,15 @@
 //
-//  CustomCellCollectionView.swift
+//  ImageCellCollectionView.swift
 //  ImageGallery
 //
-//  Created by Katerina on 25.03.17.
+//  Created by Katerina on 02.04.17.
 //  Copyright © 2017 Katerina. All rights reserved.
 //
 
 import UIKit
 
-class CustomCellCollectionView: UICollectionViewCell {
-
+class ImageCellCollectionView: UICollectionViewCell {
+    
     @IBOutlet weak var imageCustomCell: UIImageView!
     
     @IBOutlet weak var weatherLabel: UILabel!
@@ -20,5 +20,5 @@ class CustomCellCollectionView: UICollectionViewCell {
         super.awakeFromNib()
         // Initialization code
     }
-
+    
 }

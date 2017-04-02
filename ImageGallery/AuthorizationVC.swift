@@ -8,21 +8,12 @@
 
 import UIKit
 
-extension UIButton {
+
+class AuthorizationVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate{
+
+    var signupMode = false
     
-    func setRounded() {
-        let radius = self.frame.width / 2
-        self.layer.cornerRadius = radius
-        self.layer.masksToBounds = true
-    }
-}
-
-class AuthorizationVC: UIViewController ,UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate{
-
-    var signupMode = true
     var activityIndicator = UIActivityIndicatorView()
-    
-    let urlLogin = NSURL(string: "http://api.doitserver.in.ua/login")!
     
     
     @IBOutlet weak var emailTextField: UITextField!
@@ -34,7 +25,9 @@ class AuthorizationVC: UIViewController ,UIImagePickerControllerDelegate, UINavi
     @IBOutlet weak var photoButton: UIButton!
     
     @IBOutlet weak var userNameTextField: UITextField!
+   
     let picker = UIImagePickerController()
+    let imagePlaceholder = UIImage(named:"placeholder")
     
     override func viewDidLoad() {
         
@@ -45,11 +38,29 @@ class AuthorizationVC: UIViewController ,UIImagePickerControllerDelegate, UINavi
         
       self.navigationController?.navigationBar.tintColor = UIColor.white
       self.navigationController?.navigationBar.backgroundColor = UIColor.red
-        
-      self.emailTextField.delegate = self
-      self.passwordTextField.delegate = self
-      self.userNameTextField.delegate = self
 
+        
+      emailTextField.delegate = self
+      passwordTextField.delegate = self
+      userNameTextField.delegate = self
+        
+      userNameTextField.attributedPlaceholder =
+            NSAttributedString(string: "UserName", attributes: [NSForegroundColorAttributeName : UIColor.gray])
+      emailTextField.attributedPlaceholder =
+            NSAttributedString(string: "Email", attributes: [NSForegroundColorAttributeName : UIColor.gray])
+      passwordTextField.attributedPlaceholder =
+            NSAttributedString(string: "Password", attributes: [NSForegroundColorAttributeName : UIColor.gray])
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(UIViewController.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(UIViewController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        
+        
+        signupOrLogin.setTitle("Log In", for: [])
+        changeSignupModeButton.setTitle("Sign Up", for: [])
+        photoButton.alpha = 0
+        userNameTextField.alpha = 0
+        messageLabel.text = "Don't have an account?"
+        
     }
     
 
@@ -57,6 +68,8 @@ class AuthorizationVC: UIViewController ,UIImagePickerControllerDelegate, UINavi
         super.didReceiveMemoryWarning()
         
     }
+
+
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
@@ -135,16 +148,17 @@ class AuthorizationVC: UIViewController ,UIImagePickerControllerDelegate, UINavi
             
             if signupMode {
                 // Sign Up
-                signUp()
                 
-//                activityIndicator.center = self.view.center
-//                activityIndicator.hidesWhenStopped = true
-//                activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
-//                activityIndicator.startAnimating()
-//                view.addSubview(activityIndicator)
+                    if photoButton.currentImage == imagePlaceholder {
+                         createAlert(title: "Error in form", message: "Please add your Avatar")
+                      } else {
+                        signUp()
+                  }
+
                 
             } else {
                 // Login mode
+                
                 self.signIn()
             }
         }
@@ -157,7 +171,35 @@ class AuthorizationVC: UIViewController ,UIImagePickerControllerDelegate, UINavi
         let session = URLSession.shared
         
         let httpClient = HttpClient()
+        let userData = PostLoginRequest()
+        userData.email = emailTextField.text!
+        userData.password = passwordTextField.text!
+        
+        httpClient.postLogIn2(data: userData, successCallback: {
+            (response) -> Void in
+            
+            // Get token, go to next screen, etc.
+            UserDefaults.standard.setValue(response.token, forKey: "token")
+            UserDefaults.standard.synchronize()
+            
+            DispatchQueue.main.sync {
+                // self.activityIndicator.stopAnimating()
+                self.performSegue(withIdentifier: "showListOfImages", sender: nil)
+            }
 
+            
+        }, errorCallback: {
+            (error) -> Void in
+            
+            // Show popup with error message
+            print(error.message)
+            DispatchQueue.main.async {
+                self.createAlert(title: "Signup Error", message: "Please try again! User with this email already exists!")
+            }
+            
+        })
+        
+        
         let task = session.dataTask(with: (httpClient.postUser(email: emailTextField.text!, password: passwordTextField.text!, username: userNameTextField.text!, image: photoButton.currentImage!)) as URLRequest, completionHandler: { (data, response, error) -> Void in
             
             
@@ -172,7 +214,7 @@ class AuthorizationVC: UIViewController ,UIImagePickerControllerDelegate, UINavi
                     do {
                         
                         let dictResult:NSDictionary = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
-                        ///////////////
+                    
                         if (dictResult["error"] as? String) != nil {
                             
                             print(dictResult)
@@ -194,7 +236,7 @@ class AuthorizationVC: UIViewController ,UIImagePickerControllerDelegate, UINavi
                         } else
                             
                         {
-                            print(dictResult)
+                           // print(dictResult)
                             token = (dictResult["token"] as? String)!
                             UserDefaults.standard.setValue(token, forKey: "token")
                             UserDefaults.standard.synchronize()
@@ -275,19 +317,7 @@ class AuthorizationVC: UIViewController ,UIImagePickerControllerDelegate, UINavi
             task.resume()
     }
     
-    func createAlert(title: String, message: String) {
-        
-        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-        
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
-            
-            self.dismiss(animated: true, completion: nil)
-            
-        }))
-        
-        self.present(alert, animated: true, completion: nil)
-        
-    }
+
 
 }
 
