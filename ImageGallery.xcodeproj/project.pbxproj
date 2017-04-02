@@ -344,7 +344,7 @@
 				DEVELOPMENT_TEAM = 9VD9T9R724;
 				INFOPLIST_FILE = ImageGallery/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = GoIOS.ImageGallery;
+				PRODUCT_BUNDLE_IDENTIFIER = GoIOS.ImageGallery1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -357,7 +357,7 @@
 				DEVELOPMENT_TEAM = 9VD9T9R724;
 				INFOPLIST_FILE = ImageGallery/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = GoIOS.ImageGallery;
+				PRODUCT_BUNDLE_IDENTIFIER = GoIOS.ImageGallery1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};

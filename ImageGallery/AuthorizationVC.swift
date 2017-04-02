@@ -178,6 +178,12 @@ class AuthorizationVC: UIViewController, UIImagePickerControllerDelegate, UINavi
         let httpClient = HttpClient()
         let session = URLSession.shared
         
+        activityIndicator.center = self.view.center
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        activityIndicator.startAnimating()
+        
+        view.addSubview(activityIndicator)
         let task = session.dataTask(with: (httpClient.postUser(email: emailTextField.text!, password: passwordTextField.text!, username: userNameTextField.text!, image: photoButton.currentImage!)) as URLRequest, completionHandler: { (data, response, error) -> Void in
             
             
@@ -194,11 +200,11 @@ class AuthorizationVC: UIViewController, UIImagePickerControllerDelegate, UINavi
                     do {
                         
                         let dictResult:NSDictionary = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
-                    
+                        
                         if (dictResult["error"] as? String) != nil {
                             
-                            print(dictResult)
                             DispatchQueue.main.async {
+                                self.activityIndicator.stopAnimating()
                                 self.createAlert(title: "Signup Error", message: "Please try again! User with this email already exists!")
                             }
                             
@@ -208,24 +214,23 @@ class AuthorizationVC: UIViewController, UIImagePickerControllerDelegate, UINavi
                                 if let dictResultJSON2 = dictResultJSON1["email"] as? [String: AnyObject] {
                                     if (dictResultJSON2["errors"]) != nil{
                                         DispatchQueue.main.async {
+                                            self.activityIndicator.stopAnimating()
                                             self.createAlert(title: "Signup Error", message: "Please try again! User with this email already exists!")
                                         }
                                     }
                                 }
-                            }
-                        } else
-                            
-                        {
-                           // print(dictResult)
-                            token = (dictResult["token"] as? String)!
-                            UserDefaults.standard.setValue(token, forKey: "token")
-                            UserDefaults.standard.synchronize()
+                             } else {
+        
+                                token = (dictResult["token"] as? String)!
+                                UserDefaults.standard.setValue(token, forKey: "token")
+                                UserDefaults.standard.synchronize()
+                                
+                                DispatchQueue.main.async {
+                                        self.activityIndicator.stopAnimating()
+                                        self.performSegue(withIdentifier: "showListOfImages", sender: nil)
+                                }
 
-                            DispatchQueue.main.sync {
-                               // self.activityIndicator.stopAnimating()
-                                self.performSegue(withIdentifier: "showListOfImages", sender: nil)
                             }
-                            
                         }
                         
                     } catch {
