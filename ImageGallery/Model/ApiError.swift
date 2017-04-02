@@ -8,7 +8,18 @@
 
 import Foundation
 
-class ApiError {
-    var code:Int = 0
-    var message:String = ""    
+struct ApiError {
+    let error:String
+}
+
+extension ApiError {
+    init?(json: [String: Any]) {
+        guard let
+            error = json["error"] as? String
+        else {
+                return nil
+        }
+        
+        self.error = error
+    }
 }

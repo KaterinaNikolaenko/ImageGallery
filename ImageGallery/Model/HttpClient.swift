@@ -11,110 +11,167 @@ import UIKit
 
 class HttpClient {
     
-    //  To get images using Token
-    func getImages(tokenString:String) -> NSMutableURLRequest {
-        
-        let urlLogin = NSURL(string: "http://api.doitserver.in.ua/all")!
-        
-        
-        let request = NSMutableURLRequest(url: urlLogin as URL)
-        
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        request.httpMethod = "GET"
-        
-        request.addValue(tokenString, forHTTPHeaderField: "token")
-        
-        
-        return request
-        
-    }
-    
-     //  To get GIF using Token
-    func getImagesGif(tokenString:String) -> NSMutableURLRequest {
-        
-        let urlLogin = NSURL(string: "http://api.doitserver.in.ua/gif")!
-        
-        
-        let request = NSMutableURLRequest(url: urlLogin as URL)
-            
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            
-            request.httpMethod = "GET"
-            
-            request.addValue(tokenString, forHTTPHeaderField: "token")
-        
-        
-        return request
-        
-    }
     let baseUrl = "http://api.doitserver.in.ua"
     
-    func postLogIn2(data:PostLoginRequest, successCallback: @escaping (PostLoginResponse) -> (), errorCallback: @escaping (ApiError) -> ()) {
-        let url = NSURL(string: self.baseUrl + "/login")!
+    //  To get images using Token
+    func getImages(tokenString:String, successCallback: @escaping ([Image]) -> (), errorCallback: @escaping (ApiError) -> ()) {
+        
+        let url = NSURL(string: self.baseUrl + "/all")!
         let request = NSMutableURLRequest(url: url as URL)
         
         do {
-            let body = try JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.httpMethod = "POST"
-            request.httpBody = body
-        } catch {
-            print("Error")
+            request.httpMethod = "GET"
+            request.addValue(tokenString, forHTTPHeaderField: "token")
+        }
+                
+         let session = URLSession.shared
+         let dataTask = session.dataTask(with: request as URLRequest) { (data, response, error) in
+            
+            let httpResponse = response as! HTTPURLResponse
+            if(!self.isSuccessStatus(status: httpResponse.statusCode)) {
+                errorCallback(self.parseError(data: data!)!)
+                return
+            }
+            
+
+                var successResponse = [Image]()
+
+                    
+                    do {
+                        
+                        let dictResult:NSDictionary = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
+                        
+                        if let dictResultJSON = dictResult as? [String: AnyObject] {
+                            if let imagesResultJSON = dictResultJSON["images"] as? [[String: AnyObject]] {
+                                for imageJson in imagesResultJSON {
+                                    let myImage = Image()
+                                    myImage.id = imageJson["id"] as! Int
+                                    myImage.bigImagePath = URL(string: imageJson["bigImagePath"] as! String)
+                                    myImage.smallImagePath = URL(string: imageJson["smallImagePath"] as! String)
+                                    if let imageParamets = imageJson["parameters"] as? [String: AnyObject]{
+
+                                        if let imageAddress = imageParamets["address"] as? String{
+
+                                            myImage.address = imageAddress
+                                        }
+                                        if let imageWeather = imageParamets["weather"] as? String{
+                                            myImage.weather = imageWeather
+                                        }
+                                    }
+                                    successResponse.append(myImage)
+                                }
+                                
+                            }
+                            
+                        }
+                        
+                    } catch {
+                        print("Error")
+                    }
+
+
+                successCallback(successResponse)
+            }
+        
+        dataTask.resume()
+
+    }
+    
+     //  To get gif using Token
+    func getImagesGif(tokenString:String, successCallback: @escaping (UIImage) -> (), errorCallback: @escaping (ApiError) -> ()) {
+        
+        let url = NSURL(string: self.baseUrl + "/gif")!
+        
+        let request = NSMutableURLRequest(url: url as URL)
+        do {
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.httpMethod = "GET"
+            request.addValue(tokenString, forHTTPHeaderField: "token")
         }
         
         let session = URLSession.shared
+        
         let dataTask = session.dataTask(with: request as URLRequest) { (data, response, error) in
+            
             let httpResponse = response as! HTTPURLResponse
-            let status = (httpResponse.statusCode)
-            if(status >= 200 && status < 300) {
-                // success, deserialize to PostLoginResponse
-                let successResponse = PostLoginResponse()
-                
-                // call the callback with the loginResponse
-                successCallback(successResponse)
+            if(!self.isSuccessStatus(status: httpResponse.statusCode)) {
+                errorCallback(self.parseError(data: data!)!)
+                return
             }
-            else {
-                // error, deserialize to ApiError
-                let errorResponse = ApiError()
-                
-                // call the callback with the ApiError
-                errorCallback(errorResponse)
+            
+            // success, deserialize
+            if let json = try? JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any] {
+                let gifString = json?["gif"] as? String
+                let img = UIImage.gifImageWithURL(gifUrl: gifString!)
+                successCallback(img!)
             }
         }
         
         dataTask.resume()
     }
     
+    func downloadImage(imageUrl:URL, successCallback: @escaping (UIImage) -> ()) {
+        
+        let request = NSMutableURLRequest(url: imageUrl)
+        let session = URLSession.shared
+        
+        let dataTask = session.dataTask(with: request as URLRequest) { (data, response, error) in
+            successCallback(UIImage(data: data!)!)
+        }
     
+        dataTask.resume()
+    }
+    
+    func isSuccessStatus(status:Int) -> Bool {
+        return (status >= 200 && status < 300)
+    }
+    
+    func parseError(data:Data) -> ApiError? {
+        if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+            return ApiError(json: json!)!
+        }
+        return nil
+    }
+
     //Log in (is user exist in system)
-    func postLogIn(email:String, password:String) -> NSMutableURLRequest {
-        
-        let urlLogin = NSURL(string: "http://api.doitserver.in.ua/login")!
-        
-         let login = ["email":email, "password":password]
-        
-        
-        let request = NSMutableURLRequest(url: urlLogin as URL)
+    func postLogIn(data:PostLoginRequest, successCallback: @escaping (PostLoginResponse) -> (), errorCallback: @escaping (ApiError) -> ()) {
+        let url = NSURL(string: self.baseUrl + "/login")!
+        let login = ["email":data.email, "password":data.password]
+        let request = NSMutableURLRequest(url: url as URL)
         
         do {
-            
             let auth = try JSONSerialization.data(withJSONObject: login, options: .prettyPrinted)
-            
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            
             request.httpMethod = "POST"
-            
             request.httpBody = auth
+        } catch {
+            print("Error")
+        }
+        
+        let session = URLSession.shared
+        let dataTask = session.dataTask(with: request as URLRequest) { (data, response, error) in
             
-          }catch {
+            let httpResponse = response as! HTTPURLResponse
+            if(!self.isSuccessStatus(status: httpResponse.statusCode)) {
+                errorCallback(self.parseError(data: data!)!)
+                return
+            }
+            
+            // success, deserialize to PostLoginResponse
+            let successResponse = PostLoginResponse()
+            if let json = try? JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any] {
+                print(json!)
+                successResponse.token = (json?["token"] as? String)!
+                successCallback(successResponse)
+            }
+
+        }
+        
+        dataTask.resume()
+    }
     
-               print("Error")
-        
-           }
-        
-        return request
-     }
+    
     
     
     // Add new users
@@ -145,40 +202,89 @@ class HttpClient {
         
     }
     
-    //  Add images (using Token)
-    func postImage(latitude:String, longitude:String, description:String, tokenString:String, hashtag:String, image: UIImage) -> NSMutableURLRequest {
-        
-        let myUrl = NSURL(string: "http://api.doitserver.in.ua/image")
-        
-        
-        let request = NSMutableURLRequest(url:myUrl! as URL);
-        request.httpMethod = "POST";
-        
-        request.addValue(tokenString, forHTTPHeaderField: "token")
-        
-        
-        let param = [
-            "latitude"  : latitude,
-            "longitude"    : longitude,
-            "description" : description,
-            "hashtag": hashtag
-        ]
-        
-        
-        let boundary = generateBoundaryString()
-        
-        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-        
-        let imageData = UIImageJPEGRepresentation(image, 0.5)
-        
-        
-       // if(imageData==nil)  { return; }
-        
-        request.httpBody = createBodyWithParameters(parameters: param, imageKey: "image", imageData: imageData!, boundary: boundary)
-        
-        return request
-    }
+//    func postUser2(image: UIImage, data:PostLoginRequest, successCallback: @escaping (String) -> (), errorCallback: @escaping (ApiError) -> ()){
+//        //(email:String, password:String, username:String, image: UIImage) -> NSMutableURLRequest {
+//        
+//        let url = NSURL(string: self.baseUrl + "/create")
+//        let request = NSMutableURLRequest(url:url! as URL)
+//        do {
+//           request.httpMethod = "POST"
+//           let param = [
+//              "email" : data.email,
+//              "password" : data.password,
+//              "username" : data.username
+//           ]
+//           let boundary = generateBoundaryString()
+//           request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+//           let imageData = UIImageJPEGRepresentation(image, 0.5)
+//           request.httpBody = createBodyWithParameters(parameters: param, imageKey: "avatar", imageData: imageData!, boundary: boundary)
+//        }
+//        let session = URLSession.shared
+//        
+//        let dataTask = session.dataTask(with: request as URLRequest) { (data, response, error) in
+//            
+//            let httpResponse = response as! HTTPURLResponse
+//            if(!self.isSuccessStatus(status: httpResponse.statusCode)) {
+//                errorCallback(self.parseError(data: data!)!)
+//                return
+//            }
+//            
+//            // success, deserialize to PostLoginResponse
+//           // let successResponse = PostLoginResponse()
+//            // success, deserialize
+////            if let json = try? JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any] {
+////                let gifString = json?["gif"] as? String
+////                let img = UIImage.gifImageWithURL(gifUrl: gifString!)
+////                successCallback(img!)
+////            }
+//
+//            // call the callback with the loginResponse
+//            //successCallback(successResponse)
+//        }
+//        
+//        dataTask.resume()
+//        
+//        
+//    }
+
     
+    //  Add images (using Token)
+    
+    func postImage(tokenString: String, image: UIImage, data:Image, successCallback: @escaping (Int) -> (), errorCallback: @escaping (ApiError) -> ()){
+        
+        let url = NSURL(string: self.baseUrl + "/image")
+        let request = NSMutableURLRequest(url:url! as URL);
+        
+        do {
+              request.httpMethod = "POST";
+              request.addValue(tokenString, forHTTPHeaderField: "token")
+              let param = [
+                  "latitude"  : String(data.latitude),
+                  "longitude"    : String(data.longitude),
+                  "description" : data.description,
+                  "hashtag": data.hashtag
+              ] as [String : String]
+             let boundary = generateBoundaryString()
+             request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+             let imageData = UIImageJPEGRepresentation(image, 0.5)
+             request.httpBody = createBodyWithParameters(parameters: param, imageKey: "image", imageData: imageData!, boundary: boundary)
+    }
+        let session = URLSession.shared
+        
+        let dataTask = session.dataTask(with: request as URLRequest) { (data, response, error) in
+            
+            let httpResponse = response as! HTTPURLResponse
+            if(!self.isSuccessStatus(status: httpResponse.statusCode)) {
+                errorCallback(self.parseError(data: data!)!)
+                return
+            }
+            
+                successCallback(1)
+        }
+        
+        dataTask.resume()
+        
+    }
     
     func createBodyWithParameters(parameters: [String: String]?, imageKey: String, imageData: Data, boundary: String) -> Data {
         let body = NSMutableData();

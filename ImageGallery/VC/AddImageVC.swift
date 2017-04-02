@@ -18,7 +18,9 @@ class AddImageVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
     
     @IBOutlet weak var myImageButton: UIButton!
 
+    @IBOutlet weak var submitButton: UIButton!
     var descriptionText1:String = ""
+   let tokenString:String = UserDefaults.standard.string(forKey: "token")!
     
     var hashtagText1:String = ""
     
@@ -30,8 +32,8 @@ class AddImageVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
     
     let imagePlaceholder = UIImage(named:"placeholder")
     
-    var locationLatitude:String = "0.0"
-    var locationLongitude:String = "0.0"
+    var locationLatitude:Double = 0.0
+    var locationLongitude:Double = 0.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,13 +80,13 @@ class AddImageVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
         
         let location = locations[0]
         
-        locationLatitude = String(location.coordinate.latitude)
-        locationLongitude = String(location.coordinate.longitude)
+        locationLatitude = location.coordinate.latitude
+        locationLongitude = location.coordinate.longitude
         
     }
     
     @IBAction func addImage(_ sender: Any) {
-        
+        self.submitButton.isEnabled = false
         myImageUploadRequest()
         
     }
@@ -114,8 +116,12 @@ class AddImageVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
     
     func myImageUploadRequest()
     {
+
+        descriptionText1 = self.descriptionText.text!
+        hashtagText1 = self.hashtagText.text!
         if myImageButton.currentImage == imagePlaceholder {
             createAlert(title: "Error in form", message: "Please add image")
+            self.submitButton.isEnabled = true
         }
         else {
             
@@ -124,52 +130,36 @@ class AddImageVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
         activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
         activityIndicator.startAnimating()
         view.addSubview(activityIndicator)
-        //UIApplication.shared.beginIgnoringInteractionEvents()
+        
+            let httpClient = HttpClient()
+            let userData = Image()
+            userData.latitude = locationLatitude
+            userData.longitude = locationLongitude
+            userData.description = descriptionText1
+            userData.hashtag = hashtagText1
             
-        let session = URLSession.shared
-        let tokenString:String = UserDefaults.standard.string(forKey: "token")!
-        
-        
-         descriptionText1 = self.descriptionText.text!
-         hashtagText1 = self.hashtagText.text!
-        
-         let httpClient = HttpClient()
-        
-        let task = session.dataTask(with: (httpClient.postImage(latitude: locationLatitude, longitude: locationLongitude, description: descriptionText1, tokenString: tokenString, hashtag: hashtagText1,image: myImageButton.currentImage!)) as URLRequest, completionHandler: { (data, response, error) -> Void in
-        
-            if error != nil {
-                print("error=\(error)")
-                return
-            }
-
-          //  print("******* response = \(response)")
-
-        
-            let responseString = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
-            //print("****** response data = \(responseString!)")
-            
-            do {
-                let json = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
+            httpClient.postImage(tokenString: tokenString, image: myImageButton.currentImage!, data: userData, successCallback: {
+                (response) -> Void in
                 
-              //  print(json!)
+           DispatchQueue.main.sync {
+                    self.submitButton.isEnabled = true
+                    self.activityIndicator.stopAnimating()
+                    self.createAlert(title: "Upload picture", message: "Your picture was successfully uploaded")
+               }
                 
                 
+            }, errorCallback: {
+                (error) -> Void in
                 
-            }catch
-            {
-                print(error)
-            }
-            DispatchQueue.main.async {
-                self.activityIndicator.stopAnimating()
-                self.createAlert(title: "Upload picture", message: "Your picture was successfully uploaded")
-            }
-            
-        })
-        
-        task.resume()
+                // Show popup with error message
+                print(error.error)
+                DispatchQueue.main.async {
+                    self.createAlert(title: "Upload picture", message: "Picture didn't uploaded")
+                }
+                
+            })
         }
     }
-        
 
     
 }

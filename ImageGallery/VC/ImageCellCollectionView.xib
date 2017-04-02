@@ -18,38 +18,43 @@
                 <rect key="frame" x="0.0" y="0.0" width="182" height="180"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="wcJ-7W-8OG">
-                        <rect key="frame" x="0.0" y="0.0" width="182" height="110"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="110" id="diO-hY-g0r"/>
-                        </constraints>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="wcJ-7W-8OG">
+                        <rect key="frame" x="0.0" y="0.0" width="182" height="180"/>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Weather" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rgB-Xx-idA">
-                        <rect key="frame" x="65.5" y="112" width="51" height="16"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                        <color key="textColor" red="0.69567307690000002" green="0.0" blue="0.0065127212839999997" alpha="1" colorSpace="calibratedRGB"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Address" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JWj-z0-jpi">
+                        <rect key="frame" x="0.0" y="136" width="182" height="44"/>
+                        <color key="backgroundColor" red="0.002564102564102555" green="0.002564102564102555" blue="0.002564102564102555" alpha="0.40000000000000002" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="44" id="Qrh-JP-lPl"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="10"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Address" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JWj-z0-jpi">
-                        <rect key="frame" x="14" y="130" width="154" height="36"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Weather" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rgB-Xx-idA">
+                        <rect key="frame" x="0.0" y="0.0" width="182" height="24"/>
+                        <color key="backgroundColor" red="0.002564102564102555" green="0.002564102564102555" blue="0.002564102564102555" alpha="0.40000000000000002" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="36" id="Qrh-JP-lPl"/>
-                            <constraint firstAttribute="width" constant="154" id="kBr-GB-rO6"/>
+                            <constraint firstAttribute="height" constant="24" id="dC0-VD-HEC"/>
                         </constraints>
-                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                        <color key="textColor" red="0.69567307690000002" green="0.0" blue="0.0065127212839999997" alpha="1" colorSpace="calibratedRGB"/>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
             </view>
             <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
-                <constraint firstItem="rgB-Xx-idA" firstAttribute="top" secondItem="wcJ-7W-8OG" secondAttribute="bottom" constant="2" id="8ow-yN-koC"/>
+                <constraint firstAttribute="bottom" secondItem="wcJ-7W-8OG" secondAttribute="bottom" id="6P5-ja-Md5"/>
+                <constraint firstAttribute="bottom" secondItem="JWj-z0-jpi" secondAttribute="bottom" id="GNR-wB-IgE"/>
+                <constraint firstAttribute="trailing" secondItem="rgB-Xx-idA" secondAttribute="trailing" id="I2W-0q-rac"/>
+                <constraint firstItem="rgB-Xx-idA" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="Jtn-zO-mIA"/>
                 <constraint firstItem="wcJ-7W-8OG" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="NwT-y2-TOD"/>
-                <constraint firstItem="JWj-z0-jpi" firstAttribute="top" secondItem="rgB-Xx-idA" secondAttribute="bottom" constant="2" id="U6l-Up-aJW"/>
+                <constraint firstAttribute="trailing" secondItem="JWj-z0-jpi" secondAttribute="trailing" id="ckM-gW-Yx3"/>
                 <constraint firstItem="JWj-z0-jpi" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="cuN-LK-ofk"/>
-                <constraint firstItem="rgB-Xx-idA" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="eD1-FH-lFg"/>
                 <constraint firstAttribute="trailing" secondItem="wcJ-7W-8OG" secondAttribute="trailing" id="n15-ge-OcZ"/>
+                <constraint firstItem="rgB-Xx-idA" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="poq-9a-uuI"/>
+                <constraint firstItem="JWj-z0-jpi" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="sZv-69-4e9"/>
                 <constraint firstItem="wcJ-7W-8OG" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="y7l-ci-4PM"/>
             </constraints>
             <size key="customSize" width="182" height="180"/>
@@ -58,7 +63,7 @@
                 <outlet property="imageCustomCell" destination="wcJ-7W-8OG" id="Ub9-W5-peZ"/>
                 <outlet property="weatherLabel" destination="rgB-Xx-idA" id="aDc-nS-WYM"/>
             </connections>
-            <point key="canvasLocation" x="91" y="117"/>
+            <point key="canvasLocation" x="100" y="202"/>
         </collectionViewCell>
     </objects>
     <resources>

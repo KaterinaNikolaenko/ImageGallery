@@ -11,4 +11,5 @@ import Foundation
 class PostLoginRequest {
     var password:String = ""
     var email:String = ""
+    var username:String = ""
 }

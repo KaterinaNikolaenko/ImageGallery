@@ -28,6 +28,7 @@ class AuthorizationVC: UIViewController, UIImagePickerControllerDelegate, UINavi
    
     let picker = UIImagePickerController()
     let imagePlaceholder = UIImage(named:"placeholder")
+  //  let httpClient = HttpClient()
     
     override func viewDidLoad() {
         
@@ -60,6 +61,13 @@ class AuthorizationVC: UIViewController, UIImagePickerControllerDelegate, UINavi
         photoButton.alpha = 0
         userNameTextField.alpha = 0
         messageLabel.text = "Don't have an account?"
+        
+        /*
+        
+        let token = UserDefaults.standard.value(forKey: "token") as? String
+        if(token != nil && token != ""){
+            self.performSegue(withIdentifier: "showListOfImages", sender: nil)
+        }*/
         
     }
     
@@ -167,38 +175,8 @@ class AuthorizationVC: UIViewController, UIImagePickerControllerDelegate, UINavi
     func signUp(){
         
         var token = ""
-        
-        let session = URLSession.shared
-        
         let httpClient = HttpClient()
-        let userData = PostLoginRequest()
-        userData.email = emailTextField.text!
-        userData.password = passwordTextField.text!
-        
-        httpClient.postLogIn2(data: userData, successCallback: {
-            (response) -> Void in
-            
-            // Get token, go to next screen, etc.
-            UserDefaults.standard.setValue(response.token, forKey: "token")
-            UserDefaults.standard.synchronize()
-            
-            DispatchQueue.main.sync {
-                // self.activityIndicator.stopAnimating()
-                self.performSegue(withIdentifier: "showListOfImages", sender: nil)
-            }
-
-            
-        }, errorCallback: {
-            (error) -> Void in
-            
-            // Show popup with error message
-            print(error.message)
-            DispatchQueue.main.async {
-                self.createAlert(title: "Signup Error", message: "Please try again! User with this email already exists!")
-            }
-            
-        })
-        
+        let session = URLSession.shared
         
         let task = session.dataTask(with: (httpClient.postUser(email: emailTextField.text!, password: passwordTextField.text!, username: userNameTextField.text!, image: photoButton.currentImage!)) as URLRequest, completionHandler: { (data, response, error) -> Void in
             
@@ -210,6 +188,8 @@ class AuthorizationVC: UIViewController, UIImagePickerControllerDelegate, UINavi
             else {
                 
                 if data != nil {
+                    //let stringData = String(data: data!, encoding: .utf8)
+                    //print(stringData)
                     
                     do {
                         
@@ -264,58 +244,34 @@ class AuthorizationVC: UIViewController, UIImagePickerControllerDelegate, UINavi
     
     func signIn(){
 
-        var token = ""
+                let httpClient = HttpClient()
+                let userData = PostLoginRequest()
+                userData.email = emailTextField.text!
+                userData.password = passwordTextField.text!
         
-        let session = URLSession.shared
+                httpClient.postLogIn(data: userData, successCallback: {
+                    (response) -> Void in
         
-        let httpClient = HttpClient()
+                    // Get token, go to next screen, etc.
+                    UserDefaults.standard.setValue(response.token, forKey: "token")
+                    UserDefaults.standard.synchronize()
         
-            let task = session.dataTask(with: (httpClient.postLogIn(email: emailTextField.text!, password: passwordTextField.text!)) as URLRequest, completionHandler: { (data, response, error) -> Void in
-                
-                
-                if (error != nil) {
-                    print(error!)
-                    
-                }
-                else {
-                    
-                    if data != nil {
-                        
-                        do {
-                            
-                            let dictResult:NSDictionary = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
-                           
-                            if (dictResult["error"] as? String) != nil {
+                    DispatchQueue.main.sync {
+                        self.performSegue(withIdentifier: "showListOfImages", sender: nil)
+                    }
         
-                                DispatchQueue.main.async {
-                                    self.createAlert(title: "Login Error", message: "Please try again!")
-                                }
-                                
-                            } else
-                                
-                            {
-                                token = (dictResult["token"] as? String)!
-                                UserDefaults.standard.setValue(token, forKey: "token")
-                                UserDefaults.standard.synchronize()
-                                
-                                DispatchQueue.main.sync {
-                                 self.performSegue(withIdentifier: "showListOfImages", sender: nil)
-                              }
-                                
-                            }
-                            
-                        } catch {
-                             print("Error")
-                        }
+        
+                }, errorCallback: {
+                    (error) -> Void in
+        
+                    // Show popup with error message
+                    //print(error.error)
+                    DispatchQueue.main.async {
+                        self.createAlert(title: "Login Error", message: "Please try again!")
                     }
                     
-                }
-                
-            })
-            
-            // Start the task on a background thread
-            task.resume()
-    }
+                })
+         }
     
 
 

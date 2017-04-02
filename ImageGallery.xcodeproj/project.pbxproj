@@ -24,7 +24,6 @@
 		06CEDECE1E871C4700319FD5 /* ImageCellCollectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 06CEDECC1E871C4700319FD5 /* ImageCellCollectionView.xib */; };
 		06CEDED01E8737C100319FD5 /* AddImageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06CEDECF1E8737C100319FD5 /* AddImageVC.swift */; };
 		06CEDED41E87E69200319FD5 /* HttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06CEDED31E87E69200319FD5 /* HttpClient.swift */; };
-		06CEDED61E881FB600319FD5 /* PopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06CEDED51E881FB600319FD5 /* PopUpViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,7 +46,6 @@
 		06CEDECC1E871C4700319FD5 /* ImageCellCollectionView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ImageCellCollectionView.xib; path = VC/ImageCellCollectionView.xib; sourceTree = "<group>"; };
 		06CEDECF1E8737C100319FD5 /* AddImageVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddImageVC.swift; sourceTree = "<group>"; };
 		06CEDED31E87E69200319FD5 /* HttpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HttpClient.swift; path = ../Model/HttpClient.swift; sourceTree = "<group>"; };
-		06CEDED51E881FB600319FD5 /* PopUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopUpViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,7 +117,6 @@
 				06CEDECF1E8737C100319FD5 /* AddImageVC.swift */,
 				06AF56281E86C661001C4628 /* AuthorizationVC.swift */,
 				06AF563C1E86F9B2001C4628 /* ListOfImagesVC.swift */,
-				06CEDED51E881FB600319FD5 /* PopUpViewController.swift */,
 			);
 			path = VC;
 			sourceTree = "<group>";
@@ -220,7 +217,6 @@
 				062CF2051E9149FA0065C120 /* UIViewController.swift in Sources */,
 				06CEDED41E87E69200319FD5 /* HttpClient.swift in Sources */,
 				06AF563D1E86F9B2001C4628 /* ListOfImagesVC.swift in Sources */,
-				06CEDED61E881FB600319FD5 /* PopUpViewController.swift in Sources */,
 				062CF2071E914EDB0065C120 /* ImageCellCollectionView.swift in Sources */,
 				066542991E9030DA00A2B356 /* PostLoginResponse.swift in Sources */,
 			);

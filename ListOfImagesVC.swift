@@ -16,9 +16,10 @@ class ListOfImagesVC: UIViewController, UICollectionViewDelegate, UICollectionVi
     @IBOutlet weak var visualEffectView: UIVisualEffectView!
     
     var tokenString:String = UserDefaults.standard.string(forKey: "token")!
-    var galleryImagess = [Image()]
+    var galleryImagess = [Image]()
     var imageGif : UIImage?
     var effect:UIVisualEffect!
+    var httpClient:HttpClient = HttpClient()
     
     @IBOutlet weak var imagePopUp: UIImageView!
     var activityIndicator = UIActivityIndicatorView()
@@ -59,9 +60,7 @@ class ListOfImagesVC: UIViewController, UICollectionViewDelegate, UICollectionVi
     }
     
     @IBAction func dismissPopUp(_ sender: Any) {
-        DispatchQueue.main.async {
-            self.activityIndicator.stopAnimating()
-        }
+        self.activityIndicator.stopAnimating()
         removeAnimate()
     }
     
@@ -79,129 +78,65 @@ class ListOfImagesVC: UIViewController, UICollectionViewDelegate, UICollectionVi
     // Get GIF using Token
     func getGifImages(){
         
-        var gifString = ""
-        
-        activityIndicator.center = popupView.center
-        activityIndicator.hidesWhenStopped = true
-        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.white
-        activityIndicator.startAnimating()
-        view.addSubview(activityIndicator)
-        
-        let session = URLSession.shared
-        let httpClient = HttpClient()
-        let task = session.dataTask(with: (httpClient.getImagesGif(tokenString: tokenString)) as URLRequest, completionHandler: { (data, response, error) -> Void in
-            
-            if (error != nil) {
-                print(error!)
-                
-            }
-            else {
-                
-                if data != nil {
-                    
-                    do {
-                        
-                        let dictResult:NSDictionary = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
-                        
-                        if (dictResult["error"] as? String) != nil {
-                            print("Error")
-                            
-                        } else
-                            
-                        {
-                            
-                            gifString = (dictResult["gif"] as? String)!
-                            DispatchQueue.main.async {
-                                self.imageGif = UIImage.gifImageWithURL(gifUrl: gifString)
-                                if self.imageGif != nil{
-                                    self.imagePopUp.image = self.imageGif!
-                                }
-                            }
-                            UserDefaults.standard.synchronize()
-                            
-                        }
-                        
-                    } catch {
-                        print("Error")
-                    }
-                }
-                
-            }
-            DispatchQueue.main.async {
-                self.activityIndicator.stopAnimating()
-            }
-        })
-        
-        task.resume()
-    }
-
-    
-    ///////////////////
-    //To get images using Token
-     func getImagess() {
-        
-        let session = URLSession.shared
-        
         activityIndicator.center = self.view.center
         activityIndicator.hidesWhenStopped = true
         activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
         activityIndicator.startAnimating()
         view.addSubview(activityIndicator)
         
-            let httpClient = HttpClient()
-            let task = session.dataTask(with: (httpClient.getImages(tokenString: tokenString)) as URLRequest, completionHandler: { (data, response, error) -> Void in
-                
-                
-                if (error != nil) {
-                    print(error!)
-                    
-                }
-                else {
-                    
-                    // Parse JSON
-                    if data != nil {
-                        
-                        do {
-                            
-                            let dictResult:NSDictionary = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
-                            
-                            if let dictResultJSON = dictResult as? [String: AnyObject] {
-                                if let imagesResultJSON = dictResultJSON["images"] as? [[String: AnyObject]] {
-                                   // print(imagesResultJSON)
-                                    for imageJson in imagesResultJSON {
-                                        let myImage = Image()
-                                        myImage.id = imageJson["id"] as! Int
-                                        myImage.bigImagePath = URL(string: imageJson["bigImagePath"] as! String)
-                                        myImage.smallImagePath = URL(string: imageJson["smallImagePath"] as! String)
-                                        if let imageParamets = imageJson["parameters"] as? [String: AnyObject]{
-                                            if let imageAddress = imageParamets["address"] as? String{
-                                                myImage.address = imageAddress
-                                            }
-                                            if let imageWeather = imageParamets["weather"] as? String{
-                                                myImage.weather = imageWeather
-                                            }
-                                        }
-                                        self.galleryImagess.append(myImage)
-                                    }
-                                    
-                                }
-                                
-                            }
-                            
-                        } catch {
-                            print("Error")
-                        }
-                    }
-                    
-                }
-                DispatchQueue.main.async {
-                  self.collectionView.reloadData()
-                  self.activityIndicator.stopAnimating()
-                }
-            })
+        self.httpClient.getImagesGif(tokenString: tokenString, successCallback: {
+            (response) -> Void in
+    
+            DispatchQueue.main.sync {
+                self.activityIndicator.stopAnimating()
+                self.imagePopUp.image = response
+            }
             
-            task.resume()
+        }, errorCallback: {
+            (error) -> Void in
+            
+            // Show popup with error message
+            DispatchQueue.main.async {
+                self.activityIndicator.stopAnimating()
+                self.createAlert(title: "Error", message: "")
+            }
+            
+        })
+
+    }
+
+    
+    //To get images using Token
+     func getImagess() {
+               
+        activityIndicator.center = self.view.center
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        activityIndicator.startAnimating()
+        view.addSubview(activityIndicator)
         
+        self.httpClient.getImages(tokenString: tokenString, successCallback: {
+            (response) -> Void in
+           
+            DispatchQueue.main.sync {
+                self.galleryImagess = response
+                self.activityIndicator.stopAnimating()
+                self.collectionView.reloadData()
+                
+            }
+            
+        }, errorCallback: {
+            (error) -> Void in
+            
+            // Show popup with error message
+            print(error.error)
+            DispatchQueue.main.async {
+                self.activityIndicator.stopAnimating()
+                self.createAlert(title: "Error", message: "")
+            }
+            
+        })
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -218,15 +153,7 @@ class ListOfImagesVC: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     // Open PopUp
     @IBAction func getGifImage(_ sender: Any) {
-        
-//        let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "imagePoUpID") as! PopUpViewController
-//        
-//        self.addChildViewController(popOverVC)
-//        popOverVC.view.frame = self.view.frame
-//        self.view.addSubview(popOverVC.view)
-//        popOverVC.didMove(toParentViewController: self)
         animateIn()
-
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -245,20 +172,40 @@ class ListOfImagesVC: UIViewController, UICollectionViewDelegate, UICollectionVi
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell =  collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCell", for: indexPath) as! ImageCellCollectionView
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCell", for: indexPath) as! ImageCellCollectionView
+        let imageData = galleryImagess[indexPath.row]
         if galleryImagess[indexPath.row].smallImagePath != nil {
-            cell.imageCustomCell.image = UIImage(data:NSData(contentsOf:galleryImagess[indexPath.row].smallImagePath) as! Data)
-//            print("----")
-//            print(galleryImagess[indexPath.row].smallImagePath)
+            self.httpClient.downloadImage(imageUrl: imageData.smallImagePath, successCallback: { (image) in
+                DispatchQueue.main.sync {
+                    cell.imageCustomCell.image = image
+                }
+            })
         }
-        cell.weatherLabel.text = galleryImagess[indexPath.row].weather
-        cell.addressLabel.text = galleryImagess[indexPath.row].address
+        cell.weatherLabel.text = imageData.weather
+        cell.addressLabel.text = imageData.address
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 180, height: 180)
+        let screenSize: CGRect = UIScreen.main.bounds
+        var tileSize = CGFloat(180.0)
+        if(screenSize.width > screenSize.height) {
+            tileSize = screenSize.width / 4.0
+        }else{
+            tileSize = screenSize.width / 2.0
+        }
+
+        
+        return CGSize(width: tileSize, height: tileSize)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
     }
     
 
