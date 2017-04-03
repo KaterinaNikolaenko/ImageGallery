@@ -102,6 +102,9 @@ class ListOfImagesVC: UIViewController, UICollectionViewDelegate, UICollectionVi
             }
             
         })
+       // DispatchQueue.main.sync {
+          activityIndicator.stopAnimating()
+       // }
 
     }
 

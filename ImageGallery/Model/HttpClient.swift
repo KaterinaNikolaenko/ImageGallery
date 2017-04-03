@@ -104,7 +104,9 @@ class HttpClient {
             if let json = try? JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any] {
                 let gifString = json?["gif"] as? String
                 let img = UIImage.gifImageWithURL(gifUrl: gifString!)
-                successCallback(img!)
+                if img != nil {
+                  successCallback(img!)
+                }
             }
         }
         
